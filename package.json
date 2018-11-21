@@ -1,0 +1,20 @@
+{
+  "name": "js_2nd_unit_2nd_task",
+  "version": "1.0.0",
+  "description": "",
+  "main": "task.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint task.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Duchannes/js_2nd_unit_2nd_task.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Duchannes/js_2nd_unit_2nd_task/issues"
+  },
+  "homepage": "https://github.com/Duchannes/js_2nd_unit_2nd_task#readme"
+}
