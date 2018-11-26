@@ -38,6 +38,7 @@ function load (startsWith, voice) {
   };
   requestPromise(request)
     .then((response) => {
+      console.log(`response succesfully got.`);
       const data = responseParser(response);
       toVoice(data, startsWith, voice);
       createHTML(data, startsWith);
@@ -78,6 +79,7 @@ function createHTML (data, startsWith) {
     html += '</table></body></html>';
   }
   fs.writeFileSync(`./result/${startsWith}-Marvel_Heroes.html`, html);
+  console.log(`./result/${startsWith}-Marvel_Heroes.html succesfully created.`);
 }
 
 // The function that sends a request for revision of text to speech, if there is a description of the hero
@@ -119,6 +121,7 @@ function textToSpeech (request, name, startsWith) {
           throw err;
         }
       });
+      console.log(`./result/mp3/${startsWith}/${name}.mp3 succesfully created.`);
     })
     .catch(function (err) {
       throw err;
