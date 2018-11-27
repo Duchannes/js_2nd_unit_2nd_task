@@ -1,28 +1,29 @@
 const fs = require('fs');
 const requestPromise = require('request-promise');
 
-// eslint-disable-next-line no-unused-vars
 const yargs = require('yargs')
   .usage('$0 <cmd> [args]')
+  .option('voice', {
+    alias: 'v',
+    describe: 'voice gender for text-to-speech translarion',
+    choices: ['MALE', 'FEMALE', 'NEUTRAL'],
+    default: 'MALE'
+  });
+
+// eslint-disable-next-line no-unused-expressions
+yargs
   .command(
-    'load [letter] [voice]',
-    'Creates a .html file in the "result" folder, which contains a list of all marvel heroes, beginning with the [letter], with a description voiced [voice] (MALE, FEMALE, NEUTRAL)',
-    {},
+    'load <letter>',
+    'Creates a .html file in the "result" folder, which contains a list of all marvel heroes, beginning with the <letter>, with a voiced description.',
+    (yargs) => {
+      yargs.positional('letter', {
+        describe: 'The letter with which the names of the characters begin',
+        type: 'string'
+      });
+    },
     function checkArgsAndLoad (argv) {
-      const voices = ['male', 'female', 'neutral'];
-      if (typeof argv.letter === 'string') {
-        if (voices.includes(argv.voice.toLowerCase())) {
-          if (argv.letter.length !== 1) {
-            console.log(`Found more than one letter. will be used the first (${argv.letter[0]})`);
-            argv.letter = argv.letter[0];
-          }
-          load(argv.letter, argv.voice);
-        } else {
-          throw new Error('[Voice] is wrong, use one of:\n' + voices);
-        }
-      } else {
-        throw new Error('[Letter] is not a letter');
-      };
+      if (argv.letter.length !== 1) { console.log(`Found more than one letter. will be used the first (${argv.letter[0]})`); }
+      load(argv.letter[0], argv.voice);
     })
   .demandCommand(1, 'You need at least one command before moving on.')
   .help()
@@ -38,10 +39,10 @@ function load (startsWith, voice) {
   };
   requestPromise(request)
     .then((response) => {
-      console.log(`response succesfully got.`);
-      const data = responseParser(response);
-      toVoice(data, startsWith, voice);
-      createHTML(data, startsWith);
+      console.log(`The response succesfully got.`);
+      const parsedData = responseParser(response);
+      toVoice(parsedData, startsWith, voice);
+      createHTML(parsedData, startsWith);
     })
     .catch(function (err) {
       console.log(err);
@@ -85,7 +86,7 @@ function createHTML (data, startsWith) {
 // The function that sends a request for revision of text to speech, if there is a description of the hero
 function toVoice (data, startsWith, voice) {
   data.forEach(element => {
-    if (element.description) {
+    if (element.description && element.description.length > 5) {
       const body = {
         input: { text: element.description },
         voice: {
